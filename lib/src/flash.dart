@@ -57,16 +57,25 @@ class Flash<T> extends StatefulWidget {
   /// Called to create the animation that exposes the current progress of the transition
   /// controlled by the animation controller created by [FlashController.createAnimationController].
   final Animation<Offset> Function(
-          BuildContext context, FlashPosition? position, Animation<double> parent, Curve curve, Curve? reverseCurve)
-      slideAnimationCreator;
+      BuildContext context,
+      FlashPosition? position,
+      Animation<double> parent,
+      Curve curve,
+      Curve? reverseCurve) slideAnimationCreator;
 
   static Animation<Offset> _defaultSlideAnimationCreator(
-      BuildContext context, FlashPosition? position, Animation<double> parent, Curve curve, Curve? reverseCurve) {
+      BuildContext context,
+      FlashPosition? position,
+      Animation<double> parent,
+      Curve curve,
+      Curve? reverseCurve) {
     Animatable<Offset> animatable;
     if (position == FlashPosition.top) {
-      animatable = Tween<Offset>(begin: const Offset(0.0, -1.0), end: Offset.zero);
+      animatable =
+          Tween<Offset>(begin: const Offset(0.0, -1.0), end: Offset.zero);
     } else if (position == FlashPosition.bottom) {
-      animatable = Tween<Offset>(begin: const Offset(0.0, 1.0), end: Offset.zero);
+      animatable =
+          Tween<Offset>(begin: const Offset(0.0, 1.0), end: Offset.zero);
     } else {
       animatable = Tween<Offset>(begin: Offset.zero, end: Offset.zero);
     }
@@ -94,11 +103,14 @@ class _FlashState<T> extends State<Flash<T>> {
     return box.size.height;
   }
 
-  bool get enableVerticalDrag => widget.dismissDirections.contains(FlashDismissDirection.vertical);
+  bool get enableVerticalDrag =>
+      widget.dismissDirections.contains(FlashDismissDirection.vertical);
 
-  bool get enableEndToStartDrag => widget.dismissDirections.contains(FlashDismissDirection.endToStart);
+  bool get enableEndToStartDrag =>
+      widget.dismissDirections.contains(FlashDismissDirection.endToStart);
 
-  bool get enableStartToEndDrag => widget.dismissDirections.contains(FlashDismissDirection.startToEnd);
+  bool get enableStartToEndDrag =>
+      widget.dismissDirections.contains(FlashDismissDirection.startToEnd);
 
   bool get enableHorizontalDrag => enableEndToStartDrag || enableStartToEndDrag;
 
@@ -141,7 +153,8 @@ class _FlashState<T> extends State<Flash<T>> {
   }
 
   bool get _dismissUnderway =>
-      animationController.status == AnimationStatus.reverse || animationController.status == AnimationStatus.dismissed;
+      animationController.status == AnimationStatus.reverse ||
+      animationController.status == AnimationStatus.dismissed;
 
   @override
   Widget build(BuildContext context) {
@@ -150,9 +163,12 @@ class _FlashState<T> extends State<Flash<T>> {
       position: _moveAnimation,
       child: GestureDetector(
         behavior: HitTestBehavior.deferToChild,
-        onHorizontalDragUpdate: enableHorizontalDrag ? _handleHorizontalDragUpdate : null,
-        onHorizontalDragEnd: enableHorizontalDrag ? _handleHorizontalDragEnd : null,
-        onVerticalDragUpdate: enableVerticalDrag ? _handleVerticalDragUpdate : null,
+        onHorizontalDragUpdate:
+            enableHorizontalDrag ? _handleHorizontalDragUpdate : null,
+        onHorizontalDragEnd:
+            enableHorizontalDrag ? _handleHorizontalDragEnd : null,
+        onVerticalDragUpdate:
+            enableVerticalDrag ? _handleVerticalDragUpdate : null,
         onVerticalDragEnd: enableVerticalDrag ? _handleVerticalDragEnd : null,
         child: widget.child,
         excludeFromSemantics: true,
@@ -212,7 +228,8 @@ class _FlashState<T> extends State<Flash<T>> {
       setState(() => _moveAnimation = _animation);
     }
     if (details.velocity.pixelsPerSecond.dx.abs() > _kMinFlingVelocity) {
-      final double flingVelocity = details.velocity.pixelsPerSecond.dx / _childHeight;
+      final double flingVelocity =
+          details.velocity.pixelsPerSecond.dx / _childHeight;
       switch (_describeFlingGesture(details.velocity.pixelsPerSecond.dx)) {
         case _FlingGestureKind.none:
           animationController.forward();
@@ -246,16 +263,24 @@ class _FlashState<T> extends State<Flash<T>> {
     } else if (enableEndToStartDrag) {
       switch (Directionality.of(context)) {
         case TextDirection.rtl:
-          return dragExtent < 0 ? _FlingGestureKind.none : _FlingGestureKind.forward;
+          return dragExtent < 0
+              ? _FlingGestureKind.none
+              : _FlingGestureKind.forward;
         case TextDirection.ltr:
-          return dragExtent > 0 ? _FlingGestureKind.none : _FlingGestureKind.reverse;
+          return dragExtent > 0
+              ? _FlingGestureKind.none
+              : _FlingGestureKind.reverse;
       }
     } else {
       switch (Directionality.of(context)) {
         case TextDirection.rtl:
-          return dragExtent < 0 ? _FlingGestureKind.reverse : _FlingGestureKind.none;
+          return dragExtent < 0
+              ? _FlingGestureKind.reverse
+              : _FlingGestureKind.none;
         case TextDirection.ltr:
-          return dragExtent > 0 ? _FlingGestureKind.forward : _FlingGestureKind.none;
+          return dragExtent > 0
+              ? _FlingGestureKind.forward
+              : _FlingGestureKind.none;
       }
     }
   }
@@ -282,7 +307,8 @@ class _FlashState<T> extends State<Flash<T>> {
       setState(() => _moveAnimation = _animation);
     }
     if (details.velocity.pixelsPerSecond.dy.abs() > _kMinFlingVelocity) {
-      final double flingVelocity = details.velocity.pixelsPerSecond.dy / _childHeight;
+      final double flingVelocity =
+          details.velocity.pixelsPerSecond.dy / _childHeight;
       if (widget.position == FlashPosition.top) {
         animationController.fling(velocity: flingVelocity);
         if (flingVelocity < 0) controller.deactivate();
@@ -323,9 +349,11 @@ class _FlashState<T> extends State<Flash<T>> {
       animatable = Tween<Offset>(begin: Offset(end, 0.0), end: Offset.zero);
     } else {
       if (widget.position == FlashPosition.top) {
-        animatable = Tween<Offset>(begin: const Offset(0.0, -1.0), end: Offset.zero);
+        animatable =
+            Tween<Offset>(begin: const Offset(0.0, -1.0), end: Offset.zero);
       } else {
-        animatable = Tween<Offset>(begin: const Offset(0.0, 1.0), end: Offset.zero);
+        animatable =
+            Tween<Offset>(begin: const Offset(0.0, 1.0), end: Offset.zero);
       }
     }
     _moveAnimation = animationController.drive(animatable);
@@ -482,7 +510,8 @@ class FlashBar<T> extends StatefulWidget {
   State<FlashBar> createState() => _FlashBarState();
 }
 
-class _FlashBarState extends State<FlashBar> with SingleTickerProviderStateMixin {
+class _FlashBarState extends State<FlashBar>
+    with SingleTickerProviderStateMixin {
   AnimationController? _fadeController;
   Animation<double>? _fadeAnimation;
 
@@ -505,7 +534,8 @@ class _FlashBarState extends State<FlashBar> with SingleTickerProviderStateMixin
   }
 
   void _configurePulseAnimation() {
-    _fadeController = AnimationController(vsync: this, duration: _pulseAnimationDuration);
+    _fadeController =
+        AnimationController(vsync: this, duration: _pulseAnimationDuration);
     _fadeAnimation = Tween(begin: _initialOpacity, end: _finalOpacity).animate(
       CurvedAnimation(
         parent: _fadeController!,
@@ -539,10 +569,17 @@ class _FlashBarState extends State<FlashBar> with SingleTickerProviderStateMixin
     final position = widget.position;
     final behavior = widget.behavior;
     final padding = widget.padding ?? barTheme?.padding ?? defaults.padding;
-    final backgroundColor = widget.backgroundColor ?? barTheme?.backgroundColor ?? defaults.backgroundColor!;
-    final titleTextStyle = widget.titleTextStyle ?? barTheme?.titleTextStyle ?? defaults.titleTextStyle!;
-    final contentTextStyle = widget.contentTextStyle ?? barTheme?.contentTextStyle ?? defaults.contentTextStyle!;
-    final iconColor = widget.iconColor ?? barTheme?.iconColor ?? defaults.iconColor;
+    final backgroundColor = widget.backgroundColor ??
+        barTheme?.backgroundColor ??
+        defaults.backgroundColor!;
+    final titleTextStyle = widget.titleTextStyle ??
+        barTheme?.titleTextStyle ??
+        defaults.titleTextStyle!;
+    final contentTextStyle = widget.contentTextStyle ??
+        barTheme?.contentTextStyle ??
+        defaults.contentTextStyle!;
+    final iconColor =
+        widget.iconColor ?? barTheme?.iconColor ?? defaults.iconColor;
     Widget child = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -566,7 +603,8 @@ class _FlashBarState extends State<FlashBar> with SingleTickerProviderStateMixin
         IntrinsicHeight(
           child: Row(
             mainAxisSize: MainAxisSize.min,
-            children: _getAppropriateRowLayout(titleTextStyle, contentTextStyle, iconColor, padding),
+            children: _getAppropriateRowLayout(
+                titleTextStyle, contentTextStyle, iconColor, padding),
           ),
         ),
       ],
@@ -576,14 +614,6 @@ class _FlashBarState extends State<FlashBar> with SingleTickerProviderStateMixin
       child = SafeArea(
         bottom: widget.useSafeArea && position == FlashPosition.bottom,
         top: widget.useSafeArea && position == FlashPosition.top,
-        child: child,
-      );
-    }
-
-    if (widget.position == FlashPosition.top) {
-      final brightness = ThemeData.estimateBrightnessForColor(backgroundColor);
-      child = AnnotatedRegion<SystemUiOverlayStyle>(
-        value: brightness == Brightness.dark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
         child: child,
       );
     }
@@ -598,13 +628,19 @@ class _FlashBarState extends State<FlashBar> with SingleTickerProviderStateMixin
         reverseAnimationCurve: widget.reverseAnimationCurve,
         child: Material(
           color: backgroundColor,
-          elevation: widget.elevation ?? barTheme?.elevation ?? defaults.elevation,
-          shadowColor: widget.shadowColor ?? barTheme?.shadowColor ?? defaults.shadowColor,
-          surfaceTintColor: widget.surfaceTintColor ?? barTheme?.surfaceTintColor ?? defaults.surfaceTintColor,
+          elevation:
+              widget.elevation ?? barTheme?.elevation ?? defaults.elevation,
+          shadowColor: widget.shadowColor ??
+              barTheme?.shadowColor ??
+              defaults.shadowColor,
+          surfaceTintColor: widget.surfaceTintColor ??
+              barTheme?.surfaceTintColor ??
+              defaults.surfaceTintColor,
           shape: widget.shape ?? barTheme?.shape ?? defaults.shape,
           type: MaterialType.card,
           clipBehavior: widget.clipBehavior,
-          child: widget.builder == null ? child : widget.builder!(context, child),
+          child:
+              widget.builder == null ? child : widget.builder!(context, child),
         ),
       ),
     );
@@ -618,9 +654,12 @@ class _FlashBarState extends State<FlashBar> with SingleTickerProviderStateMixin
     }
 
     return Align(
-      alignment: position == FlashPosition.top ? Alignment.topCenter : Alignment.bottomCenter,
+      alignment: position == FlashPosition.top
+          ? Alignment.topCenter
+          : Alignment.bottomCenter,
       child: AnimatedPadding(
-        padding: MediaQuery.of(context).viewInsets + (widget.margin ?? barTheme?.margin ?? defaults.margin),
+        padding: MediaQuery.of(context).viewInsets +
+            (widget.margin ?? barTheme?.margin ?? defaults.margin),
         duration: widget.insetAnimationDuration,
         curve: widget.insetAnimationCurve,
         child: MediaQuery.removeViewInsets(
@@ -635,8 +674,8 @@ class _FlashBarState extends State<FlashBar> with SingleTickerProviderStateMixin
     );
   }
 
-  List<Widget> _getAppropriateRowLayout(
-      TextStyle titleTextStyle, TextStyle contentTextStyle, Color? iconColor, EdgeInsets padding) {
+  List<Widget> _getAppropriateRowLayout(TextStyle titleTextStyle,
+      TextStyle contentTextStyle, Color? iconColor, EdgeInsets padding) {
     final messageTopMargin = _isTitlePresent ? 6.0 : padding.top;
     final messageBottomMargin = _isActionsPresent ? 6.0 : padding.bottom;
     double buttonRightPadding;
@@ -903,7 +942,9 @@ class _FlashBarState extends State<FlashBar> with SingleTickerProviderStateMixin
     return ButtonTheme(
       textTheme: ButtonTextTheme.primary,
       child: IconTheme(
-        data: Theme.of(context).iconTheme.copyWith(color: buttonTheme.colorScheme?.primary),
+        data: Theme.of(context)
+            .iconTheme
+            .copyWith(color: buttonTheme.colorScheme?.primary),
         child: widget.primaryAction!,
       ),
     );
@@ -917,7 +958,8 @@ class FlashToastTheme extends ThemeExtension<FlashToastTheme> {
     this.elevation = 4.0,
     this.shadowColor,
     this.surfaceTintColor,
-    this.shape = const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4.0))),
+    this.shape = const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(4.0))),
     this.alignment = const Alignment(0.0, 0.5),
     this.iconColor,
     this.textStyle,
@@ -978,7 +1020,8 @@ class FlashToastTheme extends ThemeExtension<FlashToastTheme> {
       backgroundColor: Color.lerp(backgroundColor, other?.backgroundColor, t),
       elevation: lerpDouble(elevation, other?.elevation, t)!,
       shadowColor: Color.lerp(shadowColor, other?.shadowColor, t),
-      surfaceTintColor: Color.lerp(surfaceTintColor, other?.surfaceTintColor, t),
+      surfaceTintColor:
+          Color.lerp(surfaceTintColor, other?.surfaceTintColor, t),
       shape: ShapeBorder.lerp(shape, other?.shape, t),
       alignment: AlignmentGeometry.lerp(alignment, other?.alignment, t)!,
       iconColor: Color.lerp(iconColor, other?.iconColor, t),
@@ -1066,12 +1109,14 @@ class FlashBarTheme extends ThemeExtension<FlashBarTheme> {
       backgroundColor: Color.lerp(backgroundColor, other?.backgroundColor, t),
       elevation: lerpDouble(elevation, other?.elevation, t)!,
       shadowColor: Color.lerp(shadowColor, other?.shadowColor, t),
-      surfaceTintColor: Color.lerp(surfaceTintColor, other?.surfaceTintColor, t),
+      surfaceTintColor:
+          Color.lerp(surfaceTintColor, other?.surfaceTintColor, t),
       shape: ShapeBorder.lerp(shape, other?.shape, t),
       padding: EdgeInsets.lerp(padding, other?.padding, t)!,
       iconColor: Color.lerp(iconColor, other?.iconColor, t),
       titleTextStyle: TextStyle.lerp(titleTextStyle, other?.titleTextStyle, t),
-      contentTextStyle: TextStyle.lerp(contentTextStyle, other?.contentTextStyle, t),
+      contentTextStyle:
+          TextStyle.lerp(contentTextStyle, other?.contentTextStyle, t),
     );
   }
 }
