@@ -205,11 +205,11 @@ class DefaultFlashController<T> implements FlashController<T> {
 
   Widget _buildBarrier(BuildContext context) {
     Widget barrier;
-    if (barrierColor != null && barrierColor!.alpha != 0) {
-      assert(barrierColor != barrierColor!.withOpacity(0.0));
+    if (barrierColor != null && barrierColor?.a != 0) {
+      assert(barrierColor != barrierColor?.withValues(alpha:0.0));
       final color = controller.drive(
         ColorTween(
-          begin: barrierColor!.withOpacity(0.0),
+          begin: barrierColor!.withValues(alpha:0.0),
           end: barrierColor,
         ).chain(CurveTween(curve: barrierCurve)),
       );
