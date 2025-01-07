@@ -209,7 +209,7 @@ class DefaultFlashController<T> implements FlashController<T> {
       assert(barrierColor != barrierColor?.withValues(alpha:0.0));
       final color = controller.drive(
         ColorTween(
-          begin: barrierColor!.withValues(alpha:0.0),
+          begin: barrierColor?.withValues(alpha:0.0),
           end: barrierColor,
         ).chain(CurveTween(curve: barrierCurve)),
       );
